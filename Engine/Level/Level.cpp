@@ -1,6 +1,6 @@
+#include "PreCompiledHeader.h"
 #include "Level.h"
 #include "../Actor/Actor.h"
-#include <iostream>
 Level::Level()
 	:mActors(nullptr), mCapacity(4), mCount(0)
 {

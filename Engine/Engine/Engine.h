@@ -1,10 +1,12 @@
 #pragma once
+#include "PreCompiledHeader.h"
+
 class TimeManager;
 class InputManager;
 class Level;
 
 // 엔진 클래스
-class Engine
+class ENGINE_API Engine
 {
 public:
 	Engine();

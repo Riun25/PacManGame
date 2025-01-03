@@ -1,4 +1,6 @@
 #pragma once
+#include "PreCompiledHeader.h"
+
 
 // 입력 처리를 위한 구조체
 struct KeyState
@@ -10,7 +12,7 @@ struct KeyState
 	bool wasKeyDown = false;
 };
 
-class InputManager
+class ENGINE_API InputManager
 {
 public:
 	InputManager();

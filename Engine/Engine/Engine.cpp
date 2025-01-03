@@ -1,9 +1,8 @@
+#include "PreCompiledHeader.h"
 #include "Engine.h"
 #include "TimeManager.h"
 #include "InputManager.h"
 #include "Level/Level.h"
-#include <Windows.h>
-#include <iostream>
 
 // 스태틱 변수 초기화
 Engine* Engine::instance = nullptr;

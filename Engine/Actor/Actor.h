@@ -1,7 +1,9 @@
 #pragma once
+#include "PreCompiledHeader.h"
+
 
 // 레벨의 기본 물체
-class Actor
+class ENGINE_API Actor
 {
 public:
 	Actor();

@@ -1,19 +1,14 @@
-#include <iostream>
+#include "PreCompiledHeader.h"
 #include "Engine/Engine.h"
-#include "TestLevel.h"
-
+#include "Level/Level.h"
 int main()
 {
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	Engine* gameDemo = new Engine();
-
-	gameDemo->LoadLevel(new TestLevel());
+	gameDemo->LoadLevel(new Level);
 	gameDemo->Run();
-
-	if (gameDemo->GetIsQuit())
-	if (gameDemo->GetIsQuit())
-	{
-		delete gameDemo;
-	}
+	gameDemo->QuitGame();
 
 	return 0;
 }

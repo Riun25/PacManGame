@@ -1,4 +1,4 @@
-#include <cassert>
+#include "PreCompiledHeader.h"
 #include "TimeManager.h"
 TimeManager::TimeManager()
 	:mFrequency({0}), mTime({0}), mCurrentTime(0), mPreviousTime(0), mDeltaTime(0.0f)

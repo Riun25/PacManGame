@@ -1,7 +1,7 @@
 #pragma once
-#include <Windows.h>
+#include "PreCompiledHeader.h"
 
-class TimeManager
+class ENGINE_API TimeManager
 {
 public:
 	TimeManager();
