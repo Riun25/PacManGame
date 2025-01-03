@@ -1,39 +1,38 @@
 #include "Engine.h"
+#include "TimeManager.h"
+#include "InputManager.h"
+#include "Level/Level.h"
 #include <Windows.h>
 #include <iostream>
 
+// 스태틱 변수 초기화
+Engine* Engine::instance = nullptr;
+
 Engine::Engine()
-	: mIsQuit(false)
+	: mIsQuit(false), mMainLevel(nullptr)
 {
+	// 싱글톤 객체 설정
+	instance = this;
+	mpTimeManager = new TimeManager();
+	mpInputManager = new InputManager();
 }
 
 Engine::~Engine()
 {
+	delete mpInputManager;
+	delete mpTimeManager;
+
+	// 메인 레벨 메모리 해제
+	if (mMainLevel != nullptr)
+	{
+		delete mMainLevel;
+	}
 }
 
 void Engine::Run()
 {
-	// 시작 타임 스탬프 저장
-	//unsigned long currentTime = timeGetTime();
-	//unsigned long previousTime = 0;
-
-	// CPU 시계 사용
-	LARGE_INTEGER frequency;
-	QueryPerformanceFrequency(&frequency);
-
-	// 시작 시간 및 이전 시간을 위한 함수
-	LARGE_INTEGER time;
-	QueryPerformanceCounter(&time);
-
-	int64_t currentTime = time.QuadPart;
-	int64_t previousTime = 0;
-
-	// 프레임 제한
-	float targetFrameRate = 60.0f;
-
-	// 한 프레임 시간 계산
-	float targetOneFrameTime = 1.0f / targetFrameRate;
-
+	mpTimeManager->Initialize();
+	mpTimeManager->LimitFrame(60.0f);
 
 	// Game-Loop
 	while (true)
@@ -44,47 +43,19 @@ void Engine::Run()
 			break;
 		}
 
-		// 현재 프레임 시간 저장
-		//currentTime = timeGetTime();
-		QueryPerformanceCounter(&time);
-		currentTime = time.QuadPart;
-
-		// 프레임 시간 계산
-		float deltaTime = static_cast<float>(currentTime - previousTime) / static_cast<float>(frequency.QuadPart);
-
-
-
-		// 프레임 확인
-		if (deltaTime >= targetOneFrameTime)
-		{
-			// 입력 처리 (현재 키의 눌림 상태 확인)
-			ProcessInput();
-
-			Update(deltaTime);
-			Draw();
-
-			// 키 상태 저장
-			SavePreviousKeyStates();
-
-			// 이전 프레임 시간 저장
-			previousTime = currentTime;
-		}
+		mpTimeManager->Update();
+		ProcessFrame();
+		Draw();
 	}
 }
 
-bool Engine::GetKey(int _key)
+void Engine::LoadLevel(Level* _newLevel)
 {
-	return mKeyStateArr[_key].isKeyDown;
-}
+	// 기존 레벨이 있다면 삭제 후 교체
+	
 
-bool Engine::GetKeyDown(int _key)
-{
-	return mKeyStateArr[_key].isKeyDown && !mKeyStateArr[_key].wasKeyDown;
-}
-
-bool Engine::GetKeyUp(int _key)
-{
-	return !mKeyStateArr[_key].isKeyDown && mKeyStateArr[_key].wasKeyDown;
+	// 메인 레벨 설정
+	mMainLevel = _newLevel;
 }
 
 void Engine::QuitGame()
@@ -93,33 +64,71 @@ void Engine::QuitGame()
 	mIsQuit = true;
 }
 
-void Engine::ProcessInput()
+
+bool const Engine::GetIsQuit()
 {
-	for (int idx = 0; idx < 255; idx++)
+	return mIsQuit;
+}
+
+Engine& Engine::Get()
+{
+	if (!instance)
 	{
-		mKeyStateArr[idx].isKeyDown = (GetAsyncKeyState(idx) & 0x8000) ? true : false;
+		instance = new Engine();
 	}
+	return *instance;
+}
+
+TimeManager* Engine::GetTimeManager()
+{
+	return mpTimeManager;
+}
+
+InputManager* Engine::GetInputManager()
+{
+	return mpInputManager;
 }
 
 void Engine::Update(float _dTime)
 {
-	// ESC키로 게임 종료
-	if (GetAsyncKeyState(VK_ESCAPE))
+	// 레벨 업데이트
+	if (mMainLevel != nullptr)
 	{
-		QuitGame();
+		mMainLevel->Update(_dTime);
 	}
-
-	std::cout << "DeltaTime: " << _dTime << ", FPS: " << (1.0f / _dTime) << "\n";
 }
 
 void Engine::Draw()
 {
+	if (mMainLevel != nullptr)
+	{
+		mMainLevel->Draw();
+	}
 }
 
-void Engine::SavePreviousKeyStates()
+void Engine::HandleGameLoop()
 {
-	for (int idx = 0; idx < 255; idx++)
+	mpInputManager->Update();
+	Update(mpTimeManager->GetDeltaTime());
+
+	// 키 상태 저장
+	mpInputManager->SavePreviousKeyStates();
+	// 이전 프레임 시간 저장
+	mpTimeManager->SaveCurrentTime();
+}
+
+void Engine::ProcessFrame()
+{
+	if (mpTimeManager->IsLimitFrame())
 	{
-		mKeyStateArr[idx].wasKeyDown = mKeyStateArr[idx].isKeyDown;
+		// 프레임 확인
+		if (mpTimeManager->CheckOverTargetFrame())
+		{
+			HandleGameLoop();
+		}
+	}
+	else
+	{
+		HandleGameLoop();
 	}
 }
