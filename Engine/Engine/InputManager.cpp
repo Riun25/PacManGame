@@ -1,3 +1,4 @@
+#pragma once
 #include "PreCompiledHeader.h"
 #include "InputManager.h"
 

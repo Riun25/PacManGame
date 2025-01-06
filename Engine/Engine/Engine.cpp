@@ -95,6 +95,8 @@ void Engine::Update(float _dTime)
 	{
 		mMainLevel->Update(_dTime);
 	}
+
+	std::cout << "FPS: " << _dTime << "\n";
 }
 
 void Engine::Draw()

@@ -1,3 +1,4 @@
+#pragma once
 #include "PreCompiledHeader.h"
 #include "TimeManager.h"
 TimeManager::TimeManager()

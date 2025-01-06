@@ -92,7 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>ENGINE_BUILD_DLL;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)PrecompiledHeader\</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PreCompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -101,6 +101,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>xcopy $(ProjectDir)\*.h $(SolutionDir)\Includes\ /e /y</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy $(OutDir)\*.dll $(SolutionDir)\Lib\ /e /y
+xcopy $(OutDir)\*.lib $(SolutionDir)\Lib\ /e /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -110,7 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>ENGINE_BUILD_DLL;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)PrecompiledHeader\</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PreCompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -121,6 +128,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>xcopy $(ProjectDir)\*.h $(SolutionDir)\Includes\ /e /y</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy $(OutDir)\*.dll $(SolutionDir)\Lib\ /e /y
+xcopy $(OutDir)\*.lib $(SolutionDir)\Lib\ /e /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -128,7 +142,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>ENGINE_BUILD_DLL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)PrecompiledHeader\</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PreCompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -137,6 +151,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>xcopy $(ProjectDir)\*.h $(SolutionDir)\Includes\ /e /y</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy $(OutDir)\*.dll $(SolutionDir)\Lib\ /e /y
+xcopy $(OutDir)\*.lib $(SolutionDir)\Lib\ /e /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -146,7 +167,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>ENGINE_BUILD_DLL;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)PrecompiledHeader\</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PreCompiledHeader.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -157,6 +178,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>winmm.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>xcopy $(ProjectDir)\*.h $(SolutionDir)\Includes\ /e /y</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy $(OutDir)\*.dll $(SolutionDir)\Lib\ /e /y
+xcopy $(OutDir)\*.lib $(SolutionDir)\Lib\ /e /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Actor\Actor.cpp" />
@@ -165,7 +193,7 @@
     <ClCompile Include="Level\Level.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Engine\TimeManager.cpp" />
-    <ClCompile Include="PreCompiledHeader.cpp">
+    <ClCompile Include="PreCompiledHeader\PreCompiledHeader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -174,11 +202,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor\Actor.h" />
+    <ClInclude Include="Core.h" />
     <ClInclude Include="Engine\Engine.h" />
     <ClInclude Include="Engine\TimeManager.h" />
     <ClInclude Include="Engine\InputManager.h" />
     <ClInclude Include="Level\Level.h" />
-    <ClInclude Include="PreCompiledHeader.h" />
+    <ClInclude Include="PreCompiledHeader\PreCompiledHeader.h" />
+    <ClInclude Include="RTTI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
