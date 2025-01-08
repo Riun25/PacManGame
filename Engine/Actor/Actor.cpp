@@ -2,7 +2,7 @@
 #include "Actor.h"
 
 Actor::Actor()
-	:mIsActive(true), mIsExpired(false)
+	:pos(0,0), isActive(true), isExpired(false)
 {
 
 }
@@ -18,4 +18,14 @@ void Actor::Update(float _dTime)
 
 void Actor::Draw()
 {
+}
+
+void Actor::SetPosition(const Vector2& _newPos)
+{
+	pos = _newPos;
+}
+
+Vector2 Actor::Position() const
+{
+	return pos;
 }

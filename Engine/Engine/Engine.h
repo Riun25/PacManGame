@@ -1,6 +1,7 @@
 #pragma once
 #include "Core.h"
 
+// @refector : 엔진이 싱글톤일 필요는 없다. 매니저에서 인풋과 타임은 싱글이어야 하는게 맞다. 추후 수정한다.
 class TimeManager;
 class InputManager;
 class Level;
@@ -30,7 +31,6 @@ public:
 
 	// 매니저 접근 함수
 	TimeManager* GetTimeManager();
-	InputManager* GetInputManager();
 protected:
 	void Update(float _dTime);			// Tick();
 	void Draw();						// Render();
@@ -38,6 +38,9 @@ protected:
 	void ProcessFrame();
 
 private:
+	// 싱글톤 구현을 위한 전역 변수 선언
+	static Engine* gInstance;
+
 	// ID/이름 값
 
 
@@ -46,9 +49,6 @@ private:
 
 	TimeManager* mpTimeManager;
 	InputManager* mpInputManager;
-
-	// 싱글톤 구현을 위한 전역 변수 선언
-	static Engine* instance;
 
 	// 메인 레벨 변수
 	Level* mMainLevel;

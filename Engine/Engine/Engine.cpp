@@ -5,15 +5,15 @@
 #include "Level/Level.h"
 
 // ½ºÅÂÆ½ º¯¼ö ÃÊ±âÈ­
-Engine* Engine::instance = nullptr;
+Engine* Engine::gInstance = nullptr;
 
 Engine::Engine()
 	: mIsQuit(false), mMainLevel(nullptr)
 {
 	// ½Ì±ÛÅæ °´Ã¼ ¼³Á¤
-	instance = this;
+	gInstance = this;
 	mpTimeManager = new TimeManager();
-	mpInputManager = new InputManager();
+	mpInputManager = &InputManager::Get();
 }
 
 Engine::~Engine()
@@ -71,21 +71,16 @@ bool const Engine::GetIsQuit()
 
 Engine& Engine::Get()
 {
-	if (!instance)
+	if (!gInstance)
 	{
-		instance = new Engine();
+		gInstance = new Engine();
 	}
-	return *instance;
+	return *gInstance;
 }
 
 TimeManager* Engine::GetTimeManager()
 {
 	return mpTimeManager;
-}
-
-InputManager* Engine::GetInputManager()
-{
-	return mpInputManager;
 }
 
 void Engine::Update(float _dTime)
@@ -96,7 +91,7 @@ void Engine::Update(float _dTime)
 		mMainLevel->Update(_dTime);
 	}
 
-	std::cout << "FPS: " << _dTime << "\n";
+	//std::cout << "FPS: " << _dTime << "\n";
 }
 
 void Engine::Draw()

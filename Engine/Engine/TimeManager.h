@@ -29,7 +29,9 @@ private:
 	float mDeltaTime;
 
 	// 프레임 제한을 위해 사용하는 변수
+	// 타겟 프레임
 	float mTargetFrameRate;
+	// 한 프레임 시간 값(단위 : 초)
 	float mTargetOneFrameTime;
 	bool mIsLimitFrame;
 };
