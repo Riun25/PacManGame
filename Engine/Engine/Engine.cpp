@@ -3,6 +3,7 @@
 #include "TimeManager.h"
 #include "InputManager.h"
 #include "Level/Level.h"
+#include "Actor/Actor.h"
 
 // 스태틱 변수 초기화
 Engine* Engine::gInstance = nullptr;
@@ -44,7 +45,10 @@ void Engine::Run()
 
 		mpTimeManager->Update();
 		ProcessFrame();
-		Draw();
+		if (mShouldUpdate)
+		{
+			Draw();
+		}
 	}
 }
 
@@ -55,6 +59,32 @@ void Engine::LoadLevel(Level* _newLevel)
 
 	// 메인 레벨 설정
 	mMainLevel = _newLevel;
+}
+
+void Engine::AddActor(Actor* _newActor)
+{
+	// 예외 처리
+	if (mMainLevel == nullptr)
+	{
+		return;
+	}
+
+	// 레벨에 엑터 추가
+	mShouldUpdate = false;
+	mMainLevel->AddActor(_newActor);
+}
+
+void Engine::DestroyActor(Actor* _targetActor)
+{
+	// 예외 처리
+	if (mMainLevel == nullptr)
+	{
+		return;
+	}
+
+	// 레벨에 엑터 추가
+	mShouldUpdate = false;
+	_targetActor->Destroy();
 }
 
 void Engine::QuitGame()
@@ -94,6 +124,22 @@ void Engine::Update(float _dTime)
 	//std::cout << "FPS: " << _dTime << "\n";
 }
 
+void Engine::Clear()
+{
+	// 화면의 0,0으로 이동
+	mpInputManager->SetCursorPosition(0, 0);
+
+	// 화면 지우기
+	int height = 30;
+	for (int i = 0; i < height; i++)
+	{
+		Log("                              \n");
+	}
+
+	// 화면의 0,0으로 이동
+	mpInputManager->SetCursorPosition(0, 0);
+}
+
 void Engine::Draw()
 {
 	if (mMainLevel != nullptr)
@@ -105,12 +151,26 @@ void Engine::Draw()
 void Engine::HandleGameLoop()
 {
 	mpInputManager->Update();
-	Update(mpTimeManager->GetDeltaTime());
+
+	// 업데이트 가능한 상태에서만 프레임 업데이트 처리
+	if (mShouldUpdate)
+	{
+		Update(mpTimeManager->GetDeltaTime());
+	}
 
 	// 키 상태 저장
 	mpInputManager->SavePreviousKeyStates();
 	// 이전 프레임 시간 저장
 	mpTimeManager->SaveCurrentTime();
+
+	// 엑터 정리 (삭제 요청된 엑터들 정리)
+	if (mMainLevel)
+	{
+		mMainLevel->DestroyActor();
+	}
+
+	// 프레임 활성화
+	mShouldUpdate = true;
 }
 
 void Engine::ProcessFrame()
