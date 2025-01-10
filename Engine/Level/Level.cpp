@@ -39,7 +39,7 @@ void Level::Update(float _dTime)
 	for (Actor* pActor : mActorVec)
 	{
 		// 엑터가 비활성화 상태이거나, 삭제 요청된 경우 건너뛰기
-		if (pActor->isActive || pActor->isExpired)
+		if (!pActor->isActive || pActor->isExpired)
 		{
 			continue;
 		}
@@ -53,7 +53,7 @@ void Level::Draw()
 	for (Actor* pActor : mActorVec)
 	{
 		// 엑터가 비활성화 상태이거나, 삭제 요청된 경우 건너뛰기
-		if (pActor->isActive || pActor->isExpired)
+		if (!pActor->isActive || pActor->isExpired)
 		{
 			continue;
 		}

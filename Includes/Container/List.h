@@ -9,8 +9,10 @@ class List
 {
 public:
 	List()
+		:mCapacity(2)
 	{
-		ReAllocate(2);
+		mData = new T[mCapacity];
+		memset(mData, 0, sizeof(T) * mCapacity);
 	}
 
 	~List()
@@ -41,6 +43,24 @@ public:
 
 		mData[mSize] = std::move(value);
 		mSize++;
+	}
+
+	void Erase(int _idx)
+	{
+		// 예외 처리
+		if (_idx < 0 || _idx >= mSize)
+		{
+			__debugbreak();
+		}
+
+		// 삭제한 데이터의 인덱스 다음 위치를 한 칸 앞으로 모두 이동
+		for (int idx = _idx; idx < mSize - 1; idx++)
+		{
+			mData[idx] == std::move(mData[idx + 1]);
+		}
+
+		// 삭제 후 크기 줄이기
+		--mSize;
 	}
 
 	int Size() const

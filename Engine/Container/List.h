@@ -9,8 +9,10 @@ class List
 {
 public:
 	List()
+		:mCapacity(2)
 	{
-		ReAllocate(2);
+		mData = new T[mCapacity];
+		memset(mData, 0, sizeof(T) * mCapacity);
 	}
 
 	~List()

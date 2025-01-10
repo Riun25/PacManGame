@@ -6,6 +6,7 @@ class TimeManager;
 class InputManager;
 
 // 엔진 클래스
+class Actor;
 class Level;
 class ENGINE_API Engine
 {
