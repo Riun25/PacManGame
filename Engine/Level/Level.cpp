@@ -16,10 +16,11 @@ Level::~Level()
 
 void Level::AddActor(Actor* _newActor)
 {
-	mActorVec.PushBack(_newActor);
+	//mActorVec.PushBack(_newActor);
+	mAddRequestedActor = _newActor;
 }
 
-void Level::DestroyActor()
+void Level::ProcessAddedAndDestroyedActor()
 {
 	// 엑터 순회 후 삭제 요청된 엑터를 처리
 	for (int idx = 0; idx < mActorVec.Size(); idx++)
@@ -30,8 +31,30 @@ void Level::DestroyActor()
 			mActorVec[idx] = nullptr;
 			mActorVec.Erase(idx);
 		}
+		++idx;
+	}
+
+	// 추가 요청된 엑터 처리
+	if (mAddRequestedActor)
+	{
+		mActorVec.PushBack(mAddRequestedActor);
+		mAddRequestedActor = nullptr;
 	}
 }
+
+//void Level::DestroyActor()
+//{
+//	// 엑터 순회 후 삭제 요청된 엑터를 처리
+//	for (int idx = 0; idx < mActorVec.Size(); idx++)
+//	{
+//		if (mActorVec[idx]->isExpired)
+//		{
+//			delete mActorVec[idx];
+//			mActorVec[idx] = nullptr;
+//			mActorVec.Erase(idx);
+//		}
+//	}
+//}
 
 void Level::Update(float _dTime)
 {

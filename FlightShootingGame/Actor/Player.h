@@ -7,7 +7,7 @@ class Player : public DrawableActor
 	RTTI_DECLARATIONS(Player, DrawableActor)
 
 public:
-	Player(char _img = 'P');
+	Player(const char* _img);
 
 	virtual void Update(float _dTime) override;
 };

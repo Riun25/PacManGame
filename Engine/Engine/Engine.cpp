@@ -142,6 +142,9 @@ void Engine::Clear()
 
 void Engine::Draw()
 {
+	// 화면 지우기.
+	Clear();
+
 	if (mMainLevel != nullptr)
 	{
 		mMainLevel->Draw();
@@ -166,7 +169,8 @@ void Engine::HandleGameLoop()
 	// 엑터 정리 (삭제 요청된 엑터들 정리)
 	if (mMainLevel)
 	{
-		mMainLevel->DestroyActor();
+		//mMainLevel->DestroyActor();
+		mMainLevel->ProcessAddedAndDestroyedActor();
 	}
 
 	// 프레임 활성화

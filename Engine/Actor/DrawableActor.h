@@ -8,8 +8,9 @@ class ENGINE_API DrawableActor : public Actor
 	RTTI_DECLARATIONS(DrawableActor, Actor)
 
 public:
-	DrawableActor(char _img = ' ');
-	virtual ~DrawableActor() = default;
+	DrawableActor(const char* _img = "");
+	//virtual ~DrawableActor() = default;
+	virtual ~DrawableActor();
 
 	virtual void Draw() override;
 	virtual void SetPosition(const Vector2& _newPos) override;
@@ -17,5 +18,5 @@ public:
 
 private:
 	// 화면에 그릴 문자 값
-	char image;
+	char* image;
 };

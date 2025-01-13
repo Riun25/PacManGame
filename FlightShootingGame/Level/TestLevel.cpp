@@ -1,4 +1,4 @@
-#include "../Demo/Level/TestLevel.h"
+#include "../FlightShootingGame/Level/TestLevel.h"
 #include "Engine/Engine.h"
 #include "Engine/InputManager.h"
 #include "Core.h"
@@ -6,7 +6,7 @@
 
 TestLevel::TestLevel()
 {
-	AddActor(new Player('A'));
+	AddActor(new Player("<A>"));
 }
 
 TestLevel::~TestLevel()
