@@ -20,10 +20,10 @@ void SafeDelete(T* _pointer)
 
 // 로그 함수
 template<typename... T>
-void Log(const char* format, T&&... args)
+void Log(const char* _format, T&&... args)
 {
 	char buffer[1024];
-	snprintf(buffer, 1024, format, args...);
+	snprintf(buffer, 1024, _format, args...);
 	std::cout << buffer;
 }
 

@@ -45,10 +45,10 @@ void Engine::Run()
 
 		mpTimeManager->Update();
 		ProcessFrame();
-		if (mShouldUpdate)
+		/*if (mShouldUpdate)
 		{
 			Draw();
-		}
+		}*/
 	}
 }
 
@@ -130,10 +130,10 @@ void Engine::Clear()
 	mpInputManager->SetCursorPosition(0, 0);
 
 	// 화면 지우기
-	int height = 30;
+	int height = 25;
 	for (int i = 0; i < height; i++)
 	{
-		Log("                              \n");
+		std::cout << "                               \n";
 	}
 
 	// 화면의 0,0으로 이동
@@ -159,6 +159,7 @@ void Engine::HandleGameLoop()
 	if (mShouldUpdate)
 	{
 		Update(mpTimeManager->GetDeltaTime());
+		Draw();
 	}
 
 	// 키 상태 저장

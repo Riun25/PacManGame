@@ -23,13 +23,14 @@ void Level::AddActor(Actor* _newActor)
 void Level::ProcessAddedAndDestroyedActor()
 {
 	// 엑터 순회 후 삭제 요청된 엑터를 처리
-	for (int idx = 0; idx < mActorVec.Size(); idx++)
+	for (int idx = 0; idx < mActorVec.Size();)
 	{
 		if (mActorVec[idx]->isExpired)
 		{
 			delete mActorVec[idx];
 			mActorVec[idx] = nullptr;
 			mActorVec.Erase(idx);
+			continue;
 		}
 		++idx;
 	}

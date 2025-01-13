@@ -1,7 +1,6 @@
 #include "../FlightShootingGame/Level/TestLevel.h"
 #include "Engine/Engine.h"
 #include "Engine/InputManager.h"
-#include "Core.h"
 #include "Actor/Player.h"
 
 TestLevel::TestLevel()

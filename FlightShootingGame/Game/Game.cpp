@@ -4,7 +4,7 @@
 Game::Game()
 {
 	// 커서 안보이게 설정
-	//InputManager::Get().SetCursorType(CURSOR_TYPE::NONE);
+	InputManager::Get().SetCursorType(CURSOR_TYPE::NONE);
 }
 
 Game::~Game()

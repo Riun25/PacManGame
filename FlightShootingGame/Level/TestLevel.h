@@ -10,6 +10,6 @@ public:
 	TestLevel();
 	~TestLevel();
 
-	virtual void Update(float _dTime);
+	virtual void Update(float _dTime) override;
 };
 

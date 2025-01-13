@@ -12,7 +12,6 @@ public:
 	// ºñ±³
 	Vector2 operator+(const Vector2& _other);
 	Vector2 operator-(const Vector2& _other);
-	//int& operator[](const int& _idx);
 	bool operator==(const Vector2& _other);
 	bool operator!=(const Vector2& _other);
 
