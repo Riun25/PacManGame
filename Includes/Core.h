@@ -1,11 +1,29 @@
 #pragma once
 
 #include <iostream>
+#include <Windows.h>
 #include <cassert>
 
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
+
+// 색상 열거형
+enum class COLOR
+{
+	RED = FOREGROUND_RED,
+	GREEN = FOREGROUND_GREEN,
+	BLUE = FOREGROUND_BLUE,
+	YELLOW = RED + GREEN,
+	MAGENTA = RED + BLUE,
+	CYAN = GREEN + BLUE,
+	WHITE = RED + GREEN + BLUE,
+};
+
+inline void SetColor(COLOR _color)
+{
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), static_cast<int>(_color));
+}
 
 // 메모리 삭제 함수
 template <typename T>
@@ -25,6 +43,28 @@ void Log(const char* _format, T&&... args)
 	char buffer[1024];
 	snprintf(buffer, 1024, _format, args...);
 	std::cout << buffer;
+}
+
+// 랜덤 함수
+inline int Random(int _min, int _max)
+{
+	// 차이 구하기
+	int diff = (_max - _min) + 1;
+	return ((diff * rand()) / (RAND_MAX + 1)) + _min;
+}
+
+// min ~ max 사이의 랜덤 값을 반환해주는 함수
+inline float RendomPercent(float _min, float _max)
+{
+	float random = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX));
+	return random * (_max - _min) + _min;
+}
+
+// 메모리 누수 확인할 때 사용하는 함수
+inline void CheckMemoryLeak()
+{
+	// https://learn.microsoft.com/ko-kr/cpp/c-runtime-library/find-memory-leaks-using-the-crt-library?view=msvc-170
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 }
 
 // 디버깅 용도

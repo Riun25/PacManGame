@@ -1,5 +1,6 @@
 #pragma once
 #include "Core.h"
+#include "../Math/Vector2.h"
 
 // @refector : 엔진이 싱글톤일 필요는 없다. 매니저에서 인풋과 타임은 싱글이어야 하는게 맞다. 추후 수정한다.
 class TimeManager;
@@ -26,6 +27,9 @@ public:
 	void AddActor(Actor* _newActor);
 	void DestroyActor(Actor* _targetActor);
 
+	// 화면 크기 반환 함수
+	inline Vector2 ScreenSize() const { return mScreenSize; }
+
 	// 엔진 종료 함수
 	void QuitGame();
 
@@ -48,8 +52,6 @@ private:
 	static Engine* gInstance;
 
 	// ID/이름 값
-
-
 	// 종료할 때 설정할 변수
 	bool mIsQuit;
 
@@ -61,5 +63,11 @@ private:
 
 	// 프레임을 업데이트해야 하는지 여부를 나타내는 변수
 	bool mShouldUpdate = true;
+
+	// 화면 크기
+	Vector2 mScreenSize;
+
+	// 화면 지울 때 사용할 버퍼(Buffer/Blob)
+	char* mEmptyStringBuffer = nullptr;
 };
 

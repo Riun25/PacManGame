@@ -36,7 +36,7 @@ public:
 
 	void PushBack(T&& value)
 	{
-		if (mSize <= mCapacity)
+		if (mSize == mCapacity)
 		{
 			ReAllocate(mCapacity * 2);
 		}
@@ -56,7 +56,7 @@ public:
 		// 삭제한 데이터의 인덱스 다음 위치를 한 칸 앞으로 모두 이동
 		for (int idx = _idx; idx < mSize - 1; idx++)
 		{
-			mData[idx] == std::move(mData[idx + 1]);
+			mData[idx] = std::move(mData[idx + 1]);
 		}
 
 		// 삭제 후 크기 줄이기
