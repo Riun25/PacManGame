@@ -176,7 +176,7 @@ void Engine::Clear()
 void Engine::Draw()
 {
 	// 화면 지우기.
-	Clear();
+	//Clear();
 
 	if (mMainLevel != nullptr)
 	{

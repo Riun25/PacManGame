@@ -103,6 +103,9 @@
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)\Lib\Engine.dll $(OutDir)\ /y</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>xcopy ..\Assets $(OutDir)..\Assets\ /y /e</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -125,6 +128,9 @@
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)\Lib\Engine.dll $(OutDir)\ /y</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>xcopy ..\Assets $(OutDir)..\Assets\ /y /e</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -143,6 +149,9 @@
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)\Lib\Engine.dll $(OutDir)\ /y</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>xcopy ..\Assets $(OutDir)..\Assets\ /y /e</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -165,9 +174,26 @@
     <PostBuildEvent>
       <Command>xcopy $(SolutionDir)\Lib\Engine.dll $(OutDir)\ /y</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>xcopy ..\Assets $(OutDir)..\Assets\ /y /e</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Actor\Box.cpp" />
+    <ClCompile Include="Actor\Player.cpp" />
+    <ClCompile Include="Actor\Target.cpp" />
+    <ClCompile Include="Actor\Wall.cpp" />
+    <ClCompile Include="Level\GameLevel.cpp" />
+    <ClCompile Include="Actor\Ground.cpp" />
     <ClCompile Include="Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Actor\Box.h" />
+    <ClInclude Include="Actor\Player.h" />
+    <ClInclude Include="Actor\Target.h" />
+    <ClInclude Include="Actor\Wall.h" />
+    <ClInclude Include="Level\GameLevel.h" />
+    <ClInclude Include="Actor\Ground.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
