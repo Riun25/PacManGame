@@ -47,6 +47,13 @@ protected:
 	void HandleGameLoop();
 	void ProcessFrame();
 
+protected:
+	TimeManager* mpTimeManager;
+	InputManager* mpInputManager;
+
+	// 메인 레벨 변수
+	Level* mMainLevel;
+
 private:
 	// 싱글톤 구현을 위한 전역 변수 선언
 	static Engine* gInstance;
@@ -55,11 +62,6 @@ private:
 	// 종료할 때 설정할 변수
 	bool mIsQuit;
 
-	TimeManager* mpTimeManager;
-	InputManager* mpInputManager;
-
-	// 메인 레벨 변수
-	Level* mMainLevel;
 
 	// 프레임을 업데이트해야 하는지 여부를 나타내는 변수
 	bool mShouldUpdate = true;

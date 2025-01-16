@@ -2,6 +2,7 @@
 #include "Engine/Engine.h"
 #include "Engine/InputManager.h"
 #include "Level/GameLevel.h"
+#include "Game/Game.h"
 
 Player::Player(const Vector2& _pos, GameLevel* _level)
 	:DrawableActor("P"), refLevel(_level)
@@ -20,7 +21,7 @@ void Player::Update(float _dTime)
 	// ESC 종료
 	if (InputManager::Get().GetKeyDown(VK_ESCAPE))
 	{
-		Engine::Get().QuitGame();
+		Game::Get().ToggleMenu();
 	}
 
 	// 상하좌우
