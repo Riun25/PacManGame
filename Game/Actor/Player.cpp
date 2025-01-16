@@ -3,15 +3,16 @@
 #include "Engine/InputManager.h"
 #include "Level/GameLevel.h"
 #include "Game/Game.h"
+#include "Enemy.h"
 
 Player::Player(const Vector2& _pos, GameLevel* _level)
-	:DrawableActor("P"), refLevel(_level)
+	:DrawableActor("●"), refLevel(_level)
 {
 	// 위치 설정
 	pos = _pos;
 
 	// 색상 설정
-	color = COLOR::MAGENTA;
+	color = COLOR::YELLOW;
 }
 
 void Player::Update(float _dTime)
@@ -24,6 +25,12 @@ void Player::Update(float _dTime)
 		Game::Get().ToggleMenu();
 	}
 
+	// 플레이어 입력 처리
+	PlayerMove();
+}
+
+void Player::PlayerMove()
+{
 	// 상하좌우
 	if (InputManager::Get().GetKeyDown(VK_LEFT))
 	{
@@ -32,8 +39,6 @@ void Player::Update(float _dTime)
 		{
 			pos.x -= 1;
 		}
-		//pos.x -= 1;
-		//pos.x = pos.x < 0 ? 0 : pos.x;
 	}
 
 	if (InputManager::Get().GetKeyDown(VK_RIGHT))
@@ -43,8 +48,6 @@ void Player::Update(float _dTime)
 		{
 			pos.x += 1;
 		}
-		//pos.x += 1;
-		//pos.x = pos.x <= Engine::Get().ScreenSize().x ? pos.x : Engine::Get().ScreenSize().x;
 	}
 
 	if (InputManager::Get().GetKeyDown(VK_UP))
@@ -54,8 +57,6 @@ void Player::Update(float _dTime)
 		{
 			pos.y -= 1;
 		}
-		//pos.y -= 1;
-		//pos.y = pos.y < 0 ? 0 : pos.y;
 	}
 
 	if (InputManager::Get().GetKeyDown(VK_DOWN))
@@ -65,7 +66,5 @@ void Player::Update(float _dTime)
 		{
 			pos.y += 1;
 		}
-		//pos.y += 1;
-		//pos.y = pos.y <= Engine::Get().ScreenSize().y ? pos.y : Engine::Get().ScreenSize().y;
 	}
 }

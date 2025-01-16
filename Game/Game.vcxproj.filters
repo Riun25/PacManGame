@@ -27,10 +27,10 @@
     <ClCompile Include="Actor\Ground.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Box.cpp">
+    <ClCompile Include="Actor\Enemy.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Actor\Target.cpp">
+    <ClCompile Include="Actor\Item.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Actor\Player.cpp">
@@ -53,10 +53,10 @@
     <ClInclude Include="Actor\Ground.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\Box.h">
+    <ClInclude Include="Actor\Enemy.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Actor\Target.h">
+    <ClInclude Include="Actor\Item.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Actor\Player.h">

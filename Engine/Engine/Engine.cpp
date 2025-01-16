@@ -87,7 +87,7 @@ void Engine::Run()
 void Engine::LoadLevel(Level* _newLevel)
 {
 	// 기존 레벨이 있다면 삭제 후 교체
-	
+	SafeDelete(mMainLevel);
 
 	// 메인 레벨 설정
 	mMainLevel = _newLevel;
@@ -184,6 +184,14 @@ void Engine::Draw()
 	}
 }
 
+void Engine::Finalize()
+{
+	if (mMainLevel != nullptr)
+	{
+		mMainLevel->Finalize();
+	}
+}
+
 void Engine::HandleGameLoop()
 {
 	mpInputManager->Update();
@@ -193,6 +201,8 @@ void Engine::HandleGameLoop()
 	{
 		Update(mpTimeManager->GetDeltaTime());
 		Draw();
+		Finalize();
+		
 	}
 
 	// 키 상태 저장

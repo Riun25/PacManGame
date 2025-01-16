@@ -20,6 +20,8 @@ public:
 
 	// Getter
 	inline int Width() const { return width; }
+	inline char* Image() const { return image; }
+	void SetImage(const char* _img);
 
 protected:
 	// 화면에 그릴 문자 값

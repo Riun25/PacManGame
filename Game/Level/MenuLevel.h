@@ -34,6 +34,8 @@ public:
 
 	virtual void Update(float deltaTime) override;
 	virtual void Draw() override;
+	virtual void Finalize() override;
+
 
 private:
 	int currentIndex = 0;

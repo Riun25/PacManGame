@@ -44,6 +44,7 @@ protected:
 	void Update(float _dTime);			// Tick();
 	void Clear();						// 화면 지우기
 	void Draw();						// Render();
+	void Finalize();					// 마무리
 	void HandleGameLoop();
 	void ProcessFrame();
 

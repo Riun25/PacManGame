@@ -46,11 +46,16 @@ void MenuLevel::Draw()
 	InputManager::Get().SetCursorPosition(0, 0);
 	
 	SetColor(unselectedColor);
-	Log("Sokoban Game\n\n");
+	Log("Pac-Man Game\n\n");
 
 	for (int ix = 0; ix < length; ++ix)
 	{
 		SetColor(ix == currentIndex ? selectedColor : unselectedColor);
 		Log("%s\n", menuItems[ix]->menuText);
 	}
+}
+
+void MenuLevel::Finalize()
+{
+
 }

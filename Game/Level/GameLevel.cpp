@@ -4,20 +4,51 @@
 #include "Engine/Engine.h"
 #include "Actor/Wall.h"
 #include "Actor/Ground.h"
-#include "Actor/Box.h"
+#include "Actor/Enemy.h"
 #include "Actor/Player.h"
-#include "Actor/Target.h"
+#include "Actor/Item.h"
 
-GameLevel::GameLevel()
+GameLevel::GameLevel(int _mapNum, int _score)
 {
 	// 커서 감추기
 	InputManager::Get().SetCursorType(CURSOR_TYPE::NONE);
 
+	// 파일 저장 @Todo : enum class 제작해서 그 개수로 할당
+	mMapData.emplace_back(0, "../Assets/Maps/colisionTest.txt");
+	mMapData.emplace_back(1, "../Assets/Maps/colisionItem.txt");
+	mMapData.emplace_back(2, "../Assets/Maps/Stage1.txt");
+	mMapData.emplace_back(3, "../Assets/Maps/Map.txt");
+	mMapData.emplace_back(4, "../Assets/Maps/Stage2.txt");
+	mMapData.emplace_back(5, "../Assets/Maps/Stage3.txt");
+
+	mClearLevel = _mapNum;
+	mScore = _score;
+	LoadMap(_mapNum);
+}
+
+void GameLevel::LoadMap(const int _stageNum)
+{
+	std::string filePath = "";
+	for (auto& e : mMapData)
+	{
+		if (e.first == _stageNum)
+		{
+			filePath = e.second;
+			break;
+		}
+	}
+
+	if (filePath == "")
+	{
+		std::cout << "존재하지 않는 파일입니다.\n";
+		__debugbreak();
+		return;
+	}
+
 	// 맵 파일 불러와 레벨 로드.
-		// 파일 읽기
+	// 파일 읽기
 	FILE* file = nullptr;
-	fopen_s(&file, "../Assets/Maps/Map.txt", "rb");
-	//fopen_s(&file, "../Assets/Maps/Stage2.txt", "rb");
+	fopen_s(&file, filePath.c_str(), "rb");
 
 	// 파일 처리
 	if (file == nullptr)
@@ -85,6 +116,7 @@ GameLevel::GameLevel()
 			Ground* ground = new Ground(Vector2(posX, posY));
 			mActorVec.PushBack(ground);
 			mMapVec.PushBack(ground);
+			++mPrayNum;
 		}
 
 		// 맵 문자가 b이면 박스 액터 생성
@@ -94,25 +126,26 @@ GameLevel::GameLevel()
 			mActorVec.PushBack(ground);
 			mMapVec.PushBack(ground);
 
-			Box* box = new Box(Vector2(posX, posY));
+			Enemy* box = new Enemy(Vector2(posX, posY));
 			mActorVec.PushBack(box);
-			mBoxVec.PushBack(box);
+			mEnemyVec.PushBack(box);
 		}
 
-		// 맵 문자가 b이면 박스 액터 생성
+		// 맵 문자가 t이면 아이템 액터 생성
 		else if (mapChar == 't')
 		{
 
-			Target* target = new Target(Vector2(posX, posY));
+			Item* target = new Item(Vector2(posX, posY));
 			mActorVec.PushBack(target);
 			mMapVec.PushBack(target);
-			mTargetVec.PushBack(target);
+			mItemVec.PushBack(target);
 		}
 
-		// 맵 문자가 b이면 박스 액터 생성
+		// 맵 문자가 p이면 플레이어 액터 생성
 		else if (mapChar == 'p')
 		{
 			Ground* ground = new Ground(Vector2(posX, posY));
+			ground->SetImage(" "); // 처음 시작하는 곳은 먹이가 없다.
 			mActorVec.PushBack(ground);
 			mMapVec.PushBack(ground);
 
@@ -137,18 +170,10 @@ void GameLevel::Update(float _dTime)
 	// 게임이 클리어됐으면, 게임 종료 처리
 	if (mIsGameClear)
 	{
-		// 대략 한 프레임의 정도의 시간 대기
-		static float elapsedTime = 0.0f;
-		elapsedTime += _dTime;
-		if (elapsedTime < 0.1f)
-		{
-			return;
-		}
-
 		// 타이머
 		static Timer timer(0.1f);
 		timer.Update(_dTime);
-		if (!timer.IsTimeOut())
+		if (timer.IsTimeOut() == false)
 		{
 			return;
 		}
@@ -160,9 +185,27 @@ void GameLevel::Update(float _dTime)
 
 		// 쓰레드 정지
 		Sleep(2000);
+	}
 
-		// 게임 종료 처리
-		Engine::Get().QuitGame();
+	// 플레이어와 적들의 충돌 처리
+	ProcessCollisionPlayerAndEnemy();
+}
+
+void GameLevel::Finalize()
+{
+	if (mIsGameClear)
+	{
+		// 더 이상 클리어할 레벨이 없다면 종료 처리
+		++mClearLevel;
+		if (mClearLevel == static_cast<int>(MAPDATA::STATGE1)) // @TODO: LENGTH로 변경
+		{
+			// 게임 종료 처리
+			Engine::Get().QuitGame();
+			return;
+		}
+
+		mIsGameClear = false;
+		Engine::Get().LoadLevel(new GameLevel(mClearLevel, mScore));
 	}
 }
 
@@ -179,7 +222,7 @@ void GameLevel::Draw()
 
 		// 박스 위치 확인
 		bool shouldDraw = true;
-		for (auto* pBox : mBoxVec)
+		for (auto* pBox : mEnemyVec)
 		{
 			if (pActor->Position() == pBox->Position())
 			{
@@ -195,7 +238,7 @@ void GameLevel::Draw()
 	}
 
 	// 타겟 그리기
-	for (auto* pTarget : mTargetVec)
+	for (auto* pTarget : mItemVec)
 	{
 		// 플레이어 위치 확인
 		if (pTarget->Position() == player->Position())
@@ -205,7 +248,7 @@ void GameLevel::Draw()
 
 		// 박스 위치 확인
 		bool shouldDraw = true;
-		for (auto* pBox : mBoxVec)
+		for (auto* pBox : mEnemyVec)
 		{
 			if (pTarget->Position() == pBox->Position())
 			{
@@ -221,7 +264,7 @@ void GameLevel::Draw()
 	}
 
 	// 박스 그리기
-	for (auto* pActor : mBoxVec)
+	for (auto* pActor : mEnemyVec)
 	{
 		// 박스 액터 그리기
 		pActor->Draw();
@@ -229,6 +272,12 @@ void GameLevel::Draw()
 
 	// 플레이어 그리기
 	player->Draw();
+
+	// 점수 출력
+	SetColor(COLOR::YELLOW);
+	InputManager::Get().SetCursorPosition(0, Engine::Get().ScreenSize().y + 1);
+	Log("Score: %d", mScore);
+	SetColor(COLOR::WHITE);
 }
 
 bool GameLevel::CanPlayerMove(const Vector2& _pos)
@@ -240,67 +289,13 @@ bool GameLevel::CanPlayerMove(const Vector2& _pos)
 	}
 
 	// 박스 검색
-	Box* searchedBox = nullptr;
-	for (auto* box : mBoxVec)
+	Enemy* searchedBox = nullptr;
+	for (auto* box : mEnemyVec)
 	{
 		if (box->Position() == _pos)
 		{
 			searchedBox = box;
 			break;
-		}
-	}
-
-	// 박스가 있을 때 처리
-	if (searchedBox)
-	{
-		// 이동 방향
-		int dirX = static_cast<int>(_pos.x - player->Position().x);
-		int dirY = static_cast<int>(_pos.y - player->Position().y);
-
-		// 박스가 이동할 새 위치
-		Vector2 newPos = searchedBox->Position() + Vector2(dirX, dirY);
-
-		// 추가 검색(박스)
-		for (auto* pBox : mBoxVec)
-		{
-			// 예외처리
-			if (pBox == searchedBox)
-			{
-				continue;
-			}
-			// 이동할 위치에 다른 박스가 있다면 이동 불가
-			if (pBox->Position() == newPos)
-			{
-				return false;
-			}
-		}
-
-		// 추가 검색(맵)
-		for (auto* pActor : mMapVec)
-		{
-			// 이동하려는 위치에 있는 액터 검색
-			if (pActor->Position() == newPos)
-			{
-				// 형변환을 통해 물체의 타입 확인
-
-				// 이동하려는 위치에 벽이 있으면 이동 불가
-				if (pActor->As<Wall>())
-				{
-					return false;
-				}
-
-				// 땅이나 타겟이면 이동 가능
-				if (pActor->As<Ground>() || pActor->As<Target>())
-				{
-					// 박스 이동 처리
-					searchedBox->SetPosition(newPos);
-
-					//게임 클리어 여부 확인
-					mIsGameClear = CheckGameClear();
-
-					return true;
-				}
-			}
 		}
 	}
 
@@ -323,34 +318,83 @@ bool GameLevel::CanPlayerMove(const Vector2& _pos)
 		return false;
 	}
 	// 검색한 액터가 이동 가능한 액터(땅/타겟)인지 확인
-	if (searchedActor->As<Ground>() || searchedActor->As<Target>())
+	if (searchedActor->As<Ground>())
 	{
+		if (searchedActor && strcmp(searchedActor->Image(), "·") == 0)
+		{
+			searchedActor->SetImage(" ");
+			// @Todo : 맵 바뀔 때 초기화
+			++mChangingNum;
+			mScore += 20;
+
+			//게임 클리어 여부 확인
+			mIsGameClear = CheckGameClear();
+		}
 		return true;
 	}
 
+	if (searchedActor->As<Item>())
+	{
+		if (searchedActor && strcmp(searchedActor->Image(), "◈") == 0)
+		{
+			searchedActor->SetImage(" ");
+			mScore += 100;
+			// @Todo : 플레이어 색 변경 및 잡아먹히는 관계 반전
+
+		}
+		return true;
+	}
 	return false;
+}
+
+void GameLevel::ProcessCollisionPlayerAndEnemy()
+{
+	// 예외처리
+	if (player == nullptr || mEnemyVec.Size() == 0)
+	{
+		return;
+	}
+	
+	// 적들을 순회하면서 충돌 처리
+	for (auto& e : mEnemyVec)
+	{
+		// 플레이어가 비활성화 상태라면 종료
+		if (!player->IsActive())
+		{
+			return;
+		}
+
+		// 적이 비활성화 상태라면 스킵
+		if (!e->IsActive())
+		{
+			continue;
+		}
+
+		// 충돌 처리
+		if (player->Intersect(*e))
+		{
+			// 충돌했으면 플레이어 제거
+			player->Destroy();
+
+			InputManager::Get().SetCursorPosition(0, Engine::Get().ScreenSize().y - 1);
+			Log("GameOver!\n");
+
+			// 약 2초간 정지
+			Sleep(2000);
+
+			// 게임 종료
+			Engine::Get().QuitGame();
+		}
+	}
 }
 
 bool GameLevel::CheckGameClear()
 {
-	// 점수 확인을 위한 변수
-	int currentScore = 0;
-	int targetScore = mTargetVec.Size();
-
-	//타겟 위치에 배치된 박스 개수 세기
-	for (auto* pBox : mBoxVec)
+	if (mPrayNum <= mChangingNum)
 	{
-		for (auto* pTarget : mTargetVec)
-		{
-			// 점수 확인
-			if (pBox->Position() == pTarget->Position())
-			{
-				++currentScore;
-				continue;
-			}
-		}
+		return true;
 	}
-
-	// 획득한 점수가 목표 점수와 같은지 비교
-	return currentScore == targetScore;
+	return false;
+	// @Todo : 디버깅을 위해 코드를 뜯어놈. 나중에는 아래로 바꿀 것
+	// return mPrayNum <= mChangingNum
 }

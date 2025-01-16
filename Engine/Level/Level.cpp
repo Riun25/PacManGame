@@ -84,3 +84,8 @@ void Level::Draw()
 		pActor->Draw();
 	}
 }
+
+void Level::Finalize()
+{
+
+}
