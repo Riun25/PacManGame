@@ -6,6 +6,13 @@ Vector2::Vector2(int _x, int _y)
 {
 }
 
+
+Vector2::Vector2()
+{
+    x = 0;
+    y = 0;
+}
+
 Vector2 Vector2::operator+(const Vector2& _other)
 {
     return Vector2(x + _other.x, y + _other.y);
@@ -16,12 +23,12 @@ Vector2 Vector2::operator-(const Vector2& _other)
     return Vector2(x - _other.x, y - _other.y);
 }
 
-bool Vector2::operator==(const Vector2& _other)
+bool Vector2::operator==(const Vector2& _other) const
 {
     return x == _other.x && y == _other.y;
 }
 
-bool Vector2::operator!=(const Vector2& _other)
+bool Vector2::operator!=(const Vector2& _other) const
 {
     return x != _other.x || y != _other.y;
 }

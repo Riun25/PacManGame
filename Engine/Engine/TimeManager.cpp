@@ -5,12 +5,10 @@ TimeManager::TimeManager()
 	:mFrequency({0}), mTime({0}), mCurrentTime(0), mPreviousTime(0), mDeltaTime(0.0f)
 	, mTargetFrameRate(60.0f), mTargetOneFrameTime(0), mIsLimitFrame(false)
 {
-
 }
 
 TimeManager::~TimeManager()
 {
-
 }
 
 void TimeManager::Initialize()

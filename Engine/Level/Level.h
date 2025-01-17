@@ -24,6 +24,7 @@ public:
 	// 루프 처리 함수
 	virtual void Update(float _dTime);
 	virtual void Draw();
+	virtual void Finalize();
 
 protected:
 	// 게임 공간에 배치되는 물체(엑터) 배열

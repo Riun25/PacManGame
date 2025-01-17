@@ -9,12 +9,44 @@
 Engine* Engine::gInstance = nullptr;
 
 Engine::Engine()
-	: mIsQuit(false), mMainLevel(nullptr)
+	: mIsQuit(false), mMainLevel(nullptr), mScreenSize(80, 25)
 {
+	// 랜덤 시드 설정
+	srand((unsigned int)time(nullptr));
+
 	// 싱글톤 객체 설정
 	gInstance = this;
 	mpTimeManager = new TimeManager();
 	mpInputManager = &InputManager::Get();
+
+	// 화면 지울 때 사용할 버퍼 초기화
+	// 1. 버퍼 크기 할당
+	mEmptyStringBuffer = new char[(mScreenSize.x + 1) * mScreenSize.y + 1];// 가로 : \n, 맨 끝 : \0 필요해서 한 칸씩 더 더해줌
+
+	// 버퍼 덮어쓰기
+	memset(mEmptyStringBuffer, ' ', (mScreenSize.x + 1) * mScreenSize.y + 1);
+
+	// 2. 값 할당
+	for (int y = 0; y < mScreenSize.y; y++)
+	{
+		//for (int x = 0; x < mScreenSize.x; x++)
+		//{
+		//	// 인덱스 계산 잘하기
+		//	mEmptyStringBuffer[(y * (mScreenSize.x + 1)) + x] = ' ';
+		//}
+		// 각 줄 끝에 개행 문자 추가
+		mEmptyStringBuffer[(y * (mScreenSize.x + 1)) + mScreenSize.x] = '\n';
+	}
+
+	// 마지막에 널 문자 추가
+	mEmptyStringBuffer[mScreenSize.y * (mScreenSize.x + 1)] = '\0';
+
+	// 디버깅
+#if _DEBUG
+	char buffer[2048];
+	strcpy_s(buffer, 2048, mEmptyStringBuffer);
+#endif
+
 }
 
 Engine::~Engine()
@@ -23,10 +55,10 @@ Engine::~Engine()
 	delete mpTimeManager;
 
 	// 메인 레벨 메모리 해제
-	if (mMainLevel != nullptr)
-	{
-		delete mMainLevel;
-	}
+	SafeDelete(mMainLevel);
+
+	// 클리어 버퍼 삭제
+	delete[] mEmptyStringBuffer;
 }
 
 void Engine::Run()
@@ -37,25 +69,25 @@ void Engine::Run()
 	// Game-Loop
 	while (true)
 	{
-		// 종료 조건
-		if (mIsQuit)
-		{
-			break;
-		}
-
 		mpTimeManager->Update();
 		ProcessFrame();
 		/*if (mShouldUpdate)
 		{
 			Draw();
 		}*/
+
+		// 종료 조건 : 액터 정리 후 종료되어야 함
+		if (mIsQuit)
+		{
+			break;
+		}
 	}
 }
 
 void Engine::LoadLevel(Level* _newLevel)
 {
 	// 기존 레벨이 있다면 삭제 후 교체
-	
+	SafeDelete(mMainLevel);
 
 	// 메인 레벨 설정
 	mMainLevel = _newLevel;
@@ -130,11 +162,12 @@ void Engine::Clear()
 	mpInputManager->SetCursorPosition(0, 0);
 
 	// 화면 지우기
-	int height = 25;
+	std::cout << mEmptyStringBuffer;
+	/*int height = 25;
 	for (int i = 0; i < height; i++)
 	{
 		std::cout << "                               \n";
-	}
+	}*/
 
 	// 화면의 0,0으로 이동
 	mpInputManager->SetCursorPosition(0, 0);
@@ -143,11 +176,19 @@ void Engine::Clear()
 void Engine::Draw()
 {
 	// 화면 지우기.
-	Clear();
+	//Clear();
 
 	if (mMainLevel != nullptr)
 	{
 		mMainLevel->Draw();
+	}
+}
+
+void Engine::Finalize()
+{
+	if (mMainLevel != nullptr)
+	{
+		mMainLevel->Finalize();
 	}
 }
 
@@ -160,6 +201,8 @@ void Engine::HandleGameLoop()
 	{
 		Update(mpTimeManager->GetDeltaTime());
 		Draw();
+		Finalize();
+		
 	}
 
 	// 키 상태 저장

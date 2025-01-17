@@ -27,7 +27,7 @@ void Level::ProcessAddedAndDestroyedActor()
 	{
 		if (mActorVec[idx]->isExpired)
 		{
-			delete mActorVec[idx];
+   			delete mActorVec[idx];
 			mActorVec[idx] = nullptr;
 			mActorVec.Erase(idx);
 			continue;
@@ -83,4 +83,9 @@ void Level::Draw()
 		}
 		pActor->Draw();
 	}
+}
+
+void Level::Finalize()
+{
+
 }
