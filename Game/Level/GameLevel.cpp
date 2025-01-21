@@ -14,12 +14,12 @@ GameLevel::GameLevel(int _mapNum, int _score)
 	InputManager::Get().SetCursorType(CURSOR_TYPE::NONE);
 
 	// 파일 저장 @Todo : enum class 제작해서 그 개수로 할당
-	mStageData.emplace_back(0, "../Assets/Maps/colisionTest.txt");
-	mStageData.emplace_back(1, "../Assets/Maps/colisionItem.txt");
-	mStageData.emplace_back(2, "../Assets/Maps/Stage1.txt");
-	mStageData.emplace_back(3, "../Assets/Maps/Map.txt");
-	mStageData.emplace_back(4, "../Assets/Maps/Stage2.txt");
-	mStageData.emplace_back(5, "../Assets/Maps/Stage3.txt");
+	//mStageData.emplace_back(0, "../Assets/Maps/colisionTest.txt");
+	//mStageData.emplace_back(1, "../Assets/Maps/colisionItem.txt");
+	mStageData.emplace_back(0, "../Assets/Maps/Stage1.txt");
+	//mStageData.emplace_back(3, "../Assets/Maps/Map.txt");
+	mStageData.emplace_back(1, "../Assets/Maps/Stage2.txt");
+	mStageData.emplace_back(2, "../Assets/Maps/Stage3.txt");
 
 	mClearLevel = _mapNum;
 	mScore = _score;
